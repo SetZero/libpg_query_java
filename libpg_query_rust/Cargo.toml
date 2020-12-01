@@ -5,6 +5,7 @@ authors = ["Sebastian <19Sebastian95@gmx.de>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+# build = "build.rs"
 
 [dependencies]
 jni = "0.18.0"
