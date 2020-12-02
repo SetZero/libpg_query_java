@@ -13,5 +13,5 @@ jni = "0.18.0"
 [build-dependencies]
 bindgen = "0.56.0"
 
-#[lib]
-#crate_type = ["cdylib"]
+[lib]
+crate_type = ["cdylib"]

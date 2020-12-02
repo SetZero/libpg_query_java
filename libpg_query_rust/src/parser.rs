@@ -25,7 +25,7 @@ fn c_str_to_str(input: *mut ::std::os::raw::c_char) -> Option<String> {
     return Some(str_buf);
 }
 
-fn parse_query(query: &str) -> Result<String, PgErrorInfo> {
+pub fn parse_query(query: String) -> Result<String, PgErrorInfo> {
     let c_str = CString::new(query).unwrap();
     let c_ptr: *const c_char = c_str.as_ptr() as *const c_char;
     let parse_tree: *mut ::std::os::raw::c_char;
@@ -37,23 +37,22 @@ fn parse_query(query: &str) -> Result<String, PgErrorInfo> {
             return Ok(c_str_to_str(parse_tree).unwrap_or(String::from("[]")));
         }
         return Err(PgErrorInfo {
-            message: c_str_to_str((*output.error).message).unwrap_or(String::from("unknown")),
-            funcname: c_str_to_str((*output.error).funcname).unwrap_or(String::from("unknown")),
-            filename: c_str_to_str((*output.error).filename).unwrap_or(String::from("unknown")),
+            message: c_str_to_str((*output.error).message).unwrap_or(String::from("none")),
+            funcname: c_str_to_str((*output.error).funcname).unwrap_or(String::from("none")),
+            filename: c_str_to_str((*output.error).filename).unwrap_or(String::from("none")),
             lineno: (*output.error).lineno,
             cursorpos: (*output.error).cursorpos,
-            context: c_str_to_str((*output.error).context).unwrap_or(String::from("unknown")),
-
+            context: c_str_to_str((*output.error).context).unwrap_or(String::from("none")),
         });
     }
 }
 
-fn main() {
+/*fn main() {
     // Statements here are executed when the compiled binary is called
 
     // Print text to the console
     match parse_query("ELECT 1") {
         Ok(v) => println!("{}", v),
-        Err(e) => println!("Error: {}", e.message)
+        Err(e) => println!("Error: {}, File: {}, Func: {}, Context: {}", e.message, e.filename, e.funcname, e.context)
     }
-}
+}*/

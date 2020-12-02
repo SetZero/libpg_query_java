@@ -3,6 +3,8 @@
 #![allow(non_snake_case)]
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
+mod parser;
+
 // This is the interface to the JVM that we'll call the majority of our
 // methods on.
 use jni::JNIEnv;
@@ -32,9 +34,15 @@ pub extern "system" fn Java_PGQueryParser_parse(env: JNIEnv,
     let input: String =
         env.get_string(input).expect("Couldn't get java string!").into();
 
+    let result: String;
+    match parser::parse_query(input) {
+        Ok(v) => result = v,
+        Err(e) => result = e.message
+    }
+
     // Then we have to create a new Java string to return. Again, more info
     // in the `strings` module.
-    let output = env.new_string(format!("Hello, {}!", input))
+    let output = env.new_string(result)
         .expect("Couldn't create java string!");
 
     // Finally, extract the raw pointer to return.
