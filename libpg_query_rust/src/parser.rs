@@ -33,6 +33,8 @@ pub fn parse_query(query: String) -> Result<String, PgErrorInfo> {
         let output = pg_query_parse(c_ptr);
         parse_tree = output.parse_tree;
 
+        // TODO: Add this (with drop trait):
+        //  pg_query_free_parse_result(output);
         if output.error.is_null() {
             return Ok(c_str_to_str(parse_tree).unwrap_or(String::from("[]")));
         }
